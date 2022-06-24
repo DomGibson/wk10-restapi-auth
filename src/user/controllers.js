@@ -30,3 +30,50 @@ exports.tokenLogin = async (req, res) => {
   const token = await jwt.sign({ id: req.user._id }, process.env.SECRET);
   res.send({ user: req.user, token });
 };
+
+// Deletion of a user within the database, 
+// wont delete other regis if making DELETE request over and over again
+exports.deleteUser = async (req, res) => {
+  // Logging { username: 'user' } as it is what it is targeting
+  console.log(`Params: ${req.params}`);
+  console.log(`Body: ${req.body}`);
+    try {
+        const userObj = {
+            username: req.body.username,
+        };
+        const userDel = await User.deleteOne(userObj);
+        console.log("Deleting User");
+        res.send(userDel);
+        if (userDel.deletedCount == 0) {
+        console.log("User Has Not Been Deleted", userDel);
+        } else if ((userDel.deletedCount != 0)) {
+          console.log("User Has Been Deleted", userDel);
+        };
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+      const userObj = {
+          username: req.body.username,
+          newusername: req.body.newusername
+      };
+      console.log("update single user", userObj);
+      let response = await User.findOneAndUpdate({
+          username: userObj.username
+      }, {
+          $set: {
+              username: userObj.newusername,
+          }
+      }, {
+          new: true
+      });
+      response = await User.findOne({username: userObj.newusername});
+      res.status(200).json({data:response});
+  } catch (error) {
+      console.log(error)
+      res.send(error);
+  }
+};
