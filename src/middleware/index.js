@@ -1,7 +1,7 @@
 // Importing the modules from Node Modules
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../user/model");
+const { User } = require("../user/model");
 
 // hashPassword generates a hash for the password.
 exports.hashPassword = async (req, res, next) => {

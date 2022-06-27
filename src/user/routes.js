@@ -8,7 +8,7 @@ const { hashPassword, unHash, tokenCheck } = require("../middleware");
 userRouter.post("/user", hashPassword, createUser);
 userRouter.get("/user", tokenCheck, tokenLogin);
 userRouter.post("/login", unHash, tokenLogin);
-userRouter.delete("/:username", deleteUser);
+userRouter.delete("/user/:username", deleteUser);
 userRouter.put("/user", updateUser);
 
 module.exports = userRouter;
